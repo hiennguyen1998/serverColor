@@ -13,17 +13,27 @@ exports.getAll = async(req,res) =>{
             console.log(a)
             query = Color.find({name: a})
         }
-        const Colors = await query
+        let Colors = await query
+        console.log("Colors: "+ Colors.length +Colors)
         let accuateRes = null
-        Colors.find((color,index)=>{
-            if(color.name === req.query.name){
-                accuateRes = color
+        // Colors.find((color,index)=>{
+        //     if(color.name === req.query.name){
+        //         accuateRes = color
+        //         Colors.splice(index,1)
+        //         // console.log(Colors.length)
+        //     }
+        //     // console.log("rs"+accuateRes)
+        // })
+        //Colors.splice(5)
+        for (let index = 0; index < Colors.length; index++) {
+            if(Colors[index].name === req.query.name){
+                accuateRes = Colors[index]
                 Colors.splice(index,1)
+                break
             }
-            //console.log("rs"+accuateRes)
-        })
+        }
         Colors.splice(5)
-        //console.log("type of: "+ typeof Colors)
+        console.log("DONE!!!!!!!!!!!!!!!!!!!!: "+ Colors)
         res.status(200).json({
             message: "Success",
             result: accuateRes,
@@ -38,3 +48,11 @@ exports.getAll = async(req,res) =>{
         })
     }
 }
+
+
+// const a=[{n:"Hien",age:18},{n:"Tuan",age:18},{n:"lam",age:18},{n:"Tu",age:18}] 
+// a.forEach((el,i) =>{
+//     if(el.n  ==="lam")
+//         {a.splice(i,1)}
+// }) 
+// console.log(a)
