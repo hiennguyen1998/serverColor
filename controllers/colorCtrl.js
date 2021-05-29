@@ -2,10 +2,12 @@ const Color = require('./../models/colorModel')
 
 exports.getAll = async(req,res) =>{
     try{
-        console.log(req.query.name)
+        let queryStr = req.query.name
+        let x = queryStr.replace("–","-")
+        console.log("q: "+x)
         let query
         if(req.query.name){
-            let a = new RegExp(req.query.name, "i")
+            let a = new RegExp(x, "u")
             query = Color.find({name: a})
         }
         let Colors = await query
@@ -13,7 +15,7 @@ exports.getAll = async(req,res) =>{
         let accuateRes = null
         let i
         Colors.forEach((color,index)=>{
-            if(color.name === req.query.name){
+            if(color.name === x){
                 accuateRes = color
                 Colors.splice(index,1)
             }
@@ -32,3 +34,4 @@ exports.getAll = async(req,res) =>{
         })
     }
 }
+
