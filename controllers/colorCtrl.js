@@ -4,7 +4,7 @@ exports.getAll = async(req,res) =>{
     try{
         let queryStr = req.query.name
         let x = queryStr.replace("–","-")
-        console.log("q: "+x)
+        console.log("q: "+x, "req: " +req.query.name)
         let query
         if(req.query.name){
             let a = new RegExp(x, "u")
