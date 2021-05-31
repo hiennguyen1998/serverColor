@@ -27,19 +27,21 @@ exports.getAll = async(req,res) =>{
         //         Colors.splice(index,1)
         //     }
         // })
-        Colors =  Colors.map(obj => obj.name)
+        let colorName =  Colors.map(obj => obj.name)
         console.log(queryStr)
-    let matchedColor = stringSimilarity.findBestMatch(`${queryStr}`, Colors);
+    let matchedColor = stringSimilarity.findBestMatch(`${queryStr}`, colorName);
     // var matches = stringSimilarity.findBestMatch("abc", [
     //     "edward",
     //     "sealed",
     //     "realed",
     //     "theatre",
     //   ]);
-    let result = matchedColor.bestMatch.rating === 0 ? null : matchedColor.bestMatch.target   
+    let result = matchedColor.bestMatch.rating === 0 ? null : matchedColor.bestMatch.target
+    Colors = await Color.find({name: result})
+    console.log(Colors)   
     res.status(200).json({
             message: "Success",
-            result
+            Colors
         })
     }catch(err){
         res.status(404).json({
