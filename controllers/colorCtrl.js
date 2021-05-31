@@ -41,7 +41,7 @@ exports.getAll = async(req,res) =>{
     //     "theatre",
     //   ]);
     let result = matchedColor.bestMatch.rating === 0 ? null : matchedColor.bestMatch.target
-    Colors = await Color.find({name: { $regex: new RegExp(`^${result}`, "i") }})
+    Colors = await Color.find({name: { $regex: new RegExp(`^${result}$`, "i") }})
     console.log(Colors)   
     res.status(200).json({
             message: "Success",
@@ -54,13 +54,3 @@ exports.getAll = async(req,res) =>{
         })
     }
 }
-
-
-
-// var similarity = stringSimilarity.compareTwoStrings("healed", "sealed");
-
-
-
-
-
-// console.log("1: "+ similarity, "2: "+ matches)
