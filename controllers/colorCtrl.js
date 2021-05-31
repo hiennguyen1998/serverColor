@@ -1,36 +1,45 @@
 const Color = require('./../models/colorModel')
+const stringSimilarity = require("string-similarity");
+
 exports.getAll = async(req,res) =>{
     try{
-        let queryStr = req.query.name
-        let query
-        queryStr = queryStr.replace("–","-")
-        console.log("q: "+queryStr, "req: " +req.query.name)
+        let queryStr = req.query.name.toUpperCase() ,Colors
+        //let query
+        //queryStr = queryStr.replace("–","-")
+        //console.log("q: "+queryStr, "req: " +req.query.name)
         if(req.query.name){
-            let regex = new RegExp(queryStr, "i")
-            query = Color.find({name: regex})
+            //let regex = new RegExp(queryStr, "i")
+            Colors = await Color.find().select("-_id name")
         }
-        let Colors = await query
-        let accuateRes = null
-        console.log("Colors: "+ Colors.length +Colors)
-        if(Colors.length == 0){
-            let nQueryStr = queryStr.split("-")[0]
-            console.log(nQueryStr)
-            let regex = new RegExp(nQueryStr, "i")
-            query = Color.find({name: regex})
-            Colors = await query
-        }
-        Colors.forEach((color,index)=>{
-            if(color.name === queryStr){
-                accuateRes = color
-                Colors.splice(index,1)
-            }
-        })
-        res.status(200).json({
+        // let Colors = await query
+        // let accuateRes = null
+        //console.log("Colors: "+ Colors.length +Colors)
+        // if(Colors.length == 0){
+        //     let nQueryStr = queryStr.split("-")[0]
+        //     console.log(nQueryStr)
+        //     let regex = new RegExp(nQueryStr, "i")
+        //     query = Color.find({name: regex})
+        //     Colors = await query
+        // }
+        // Colors.forEach((color,index)=>{
+        //     if(color.name === queryStr){
+        //         accuateRes = color
+        //         Colors.splice(index,1)
+        //     }
+        // })
+        Colors =  Colors.map(obj => obj.name)
+        console.log(queryStr)
+    let matchedColor = stringSimilarity.findBestMatch(`${queryStr}`, Colors);
+    // var matches = stringSimilarity.findBestMatch("abc", [
+    //     "edward",
+    //     "sealed",
+    //     "realed",
+    //     "theatre",
+    //   ]);
+    let result = matchedColor.bestMatch.rating === 0 ? null : matchedColor.bestMatch.target   
+    res.status(200).json({
             message: "Success",
-            result: accuateRes,
-            sugestion:{
-                Colors
-            }
+            result
         })
     }catch(err){
         res.status(404).json({
@@ -39,3 +48,13 @@ exports.getAll = async(req,res) =>{
         })
     }
 }
+
+
+
+// var similarity = stringSimilarity.compareTwoStrings("healed", "sealed");
+
+
+
+
+
+// console.log("1: "+ similarity, "2: "+ matches)
