@@ -40,8 +40,8 @@ exports.getAll = async(req,res) =>{
     //     "realed",
     //     "theatre",
     //   ]);
-    let result = matchedColor.bestMatch.rating === 0 ? null : matchedColor.bestMatch.target
-    Colors = await Color.find({name: { $regex: new RegExp(`^${result}$`, "i") }})
+    let result = matchedColor.bestMatch.rating < 0.3 ? null : matchedColor.bestMatch.target
+    Colors = await Color.find({name: { $regex: new RegExp(`^${result}$`, "i") }}).select("-_id -__v ")
     console.log(Colors)   
     res.status(200).json({
             message: "Success",
